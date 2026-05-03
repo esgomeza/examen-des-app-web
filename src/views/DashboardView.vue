@@ -1,20 +1,23 @@
-<template>
-  <div>
-    <NavbarComponent />
-
-    <div class="d-flex">
-      <SidebarComponent />
-      <div class="p-4 w-100">
-        <router-view />
-      </div>
-    </div>
-
-    <FooterComponent />
-  </div>
-</template>
-
 <script setup>
+import { ref, provide } from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
 import SidebarComponent from '../components/SidebarComponent.vue'
-import FooterComponent from '../components/FooterComponent.vue'
+
+const categoria = ref('todos')
+
+// 👉 compartir con ProductView
+provide('categoria', categoria)
 </script>
+
+<template>
+  <NavbarComponent />
+
+  <div class="d-flex">
+    <!--  AQUÍ SE ESCUCHA EL EVENTO -->
+    <SidebarComponent @filtrar="categoria = $event" />
+
+    <div class="w-100 bg-light p-4">
+      <router-view />
+    </div>
+  </div>
+</template>

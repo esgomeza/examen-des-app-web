@@ -1,6 +1,30 @@
-{
-  "id": 1,
-  "nombre": "Camiseta",
-  "precio": 50000,
-  "imagen": "https://via.placeholder.com/300"
-}
+[
+  {
+    "id": 1,
+    "nombre": "Zapatillas Response de Hombre",
+    "precio": 170000,
+    "categoria": "calzado",
+    "imagen": "https://www.sportline.com.co/media/catalog/product/i/h/ih6007_footwear-side-lateral-center-view.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&canvas=:"
+  },
+  {
+    "id": 2,
+    "nombre": "Camiseta Deportiva",
+    "precio": 60000,
+    "categoria": "ropa",
+    "imagen": "https://images.unsplash.com/photo-1520975922284-9e0c3c6d4b1a"
+  },
+  {
+    "id": 3,
+    "nombre": "Guantes Boxeo",
+    "precio": 120000,
+    "categoria": "equipos",
+    "imagen": "https://images.unsplash.com/photo-1599058917212-d750089bc07e"
+  },
+  {
+    "id": 4,
+    "nombre": "Bolso Deportivo",
+    "precio": 90000,
+    "categoria": "accesorios",
+    "imagen": "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"
+  }
+]

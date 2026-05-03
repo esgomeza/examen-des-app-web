@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, inject } from 'vue'
 import ProductCardComponent from '../components/ProductCardComponent.vue'
 import productsData from '../data/products.json'
 
+// 👇 recibir categoría desde Dashboard
+const categoria = inject('categoria', ref('todos'))
+
 const productos = ref([])
-const nuevo = ref({ nombre: '', precio: '' })
 
 onMounted(() => {
   const data = localStorage.getItem('productos')
@@ -17,41 +19,39 @@ onMounted(() => {
   }
 })
 
-const guardar = () => {
-  if (!nuevo.value.nombre || !nuevo.value.precio) return
+// 🔥 FILTRO CORREGIDO
+const productosFiltrados = computed(() => {
+  if (categoria.value === 'todos') return productos.value
 
-  productos.value.push({
-    ...nuevo.value,
-    id: Date.now()
-  })
-
-  localStorage.setItem('productos', JSON.stringify(productos.value))
-
-  nuevo.value = { nombre: '', precio: '' }
-}
+  return productos.value.filter(p =>
+    p.categoria?.toLowerCase() === categoria.value
+  )
+})
 </script>
 
 <template>
   <div>
 
-    <h2 class="mb-4">Productos</h2>
+    <!-- HERO -->
+    <div class="card text-white mb-4">
+      <img src="https://i.pinimg.com/1200x/5e/81/19/5e8119b146135cdb9c68f93ee31e3146.jpg"
+           class="card-img"
+           style="height:300px; object-fit:cover;">
 
-    <!-- FORMULARIO -->
-    <div class="card p-3 mb-4 shadow">
-      <input v-model="nuevo.nombre" class="form-control mb-2" placeholder="Nombre">
-      <input v-model="nuevo.precio" class="form-control mb-2" placeholder="Precio">
-
-      <button @click="guardar" class="btn btn-success">
-        Agregar Producto
-      </button>
+      <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+        <h2 class="fw-bold">🔥 SportMax</h2>
+        <p>Rendimiento, estilo y calidad deportiva</p>
+      </div>
     </div>
 
-    <!-- TARJETAS -->
+    <h5 class="mb-3">PRODUCTOS DEPORTIVOS</h5>
+
+    <!-- 👇 LISTA -->
     <div class="row">
-      <ProductCardComponent 
-        v-for="p in productos" 
-        :key="p.id" 
-        :producto="p" 
+      <ProductCardComponent
+        v-for="p in productosFiltrados"
+        :key="p.id"
+        :producto="p"
       />
     </div>
 
