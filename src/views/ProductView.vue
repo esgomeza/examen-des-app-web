@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import ProductCardComponent from '../components/ProductCardComponent.vue'
 import productsData from '../data/products.json'
 
 const productos = ref([])
@@ -17,37 +18,42 @@ onMounted(() => {
 })
 
 const guardar = () => {
-  productos.value.push({ ...nuevo.value, id: Date.now() })
-  localStorage.setItem('productos', JSON.stringify(productos.value))
-}
+  if (!nuevo.value.nombre || !nuevo.value.precio) return
 
-const eliminar = (id) => {
-  productos.value = productos.value.filter(p => p.id !== id)
+  productos.value.push({
+    ...nuevo.value,
+    id: Date.now()
+  })
+
   localStorage.setItem('productos', JSON.stringify(productos.value))
+
+  nuevo.value = { nombre: '', precio: '' }
 }
 </script>
 
 <template>
   <div>
-    <h2>Productos</h2>
 
-    <input v-model="nuevo.nombre" class="form-control mb-2">
-    <input v-model="nuevo.precio" class="form-control mb-2">
+    <h2 class="mb-4">Productos</h2>
 
-    <button @click="guardar" class="btn btn-success mb-3">
-      Agregar
-    </button>
+    <!-- FORMULARIO -->
+    <div class="card p-3 mb-4 shadow">
+      <input v-model="nuevo.nombre" class="form-control mb-2" placeholder="Nombre">
+      <input v-model="nuevo.precio" class="form-control mb-2" placeholder="Precio">
 
-    <table class="table">
-      <tr v-for="p in productos" :key="p.id">
-        <td>{{ p.nombre }}</td>
-        <td>{{ p.precio }}</td>
-        <td>
-          <button @click="eliminar(p.id)" class="btn btn-danger btn-sm">
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </table>
+      <button @click="guardar" class="btn btn-success">
+        Agregar Producto
+      </button>
+    </div>
+
+    <!-- TARJETAS -->
+    <div class="row">
+      <ProductCardComponent 
+        v-for="p in productos" 
+        :key="p.id" 
+        :producto="p" 
+      />
+    </div>
+
   </div>
 </template>

@@ -1,8 +1,8 @@
 <template>
-  <nav class="navbar navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
     <div class="container-fluid">
-      <span class="navbar-brand mb-0 h1">
-        🛒 Mi Negocio
+      <span class="navbar-brand fw-bold">
+        🛍️ Mi Tienda
       </span>
     </div>
   </nav>
