@@ -22,8 +22,8 @@ Desarrollar una aplicación modularizada que implemente componentes reutilizable
 
 ## 👥 Integrantes
 
-- Santiago Gómez  
-- (Agrega tu compañero aquí)
+- Santiago Gómez Arias - 0192614
+- Felipe Navarro - 0192603
 
 ---
 
