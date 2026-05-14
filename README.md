@@ -23,7 +23,7 @@ Desarrollar una aplicación modularizada que implemente componentes reutilizable
 ## 👥 Integrantes
 
 - Santiago Gómez Arias - 0192614
-- Felipe Navarro - 0192603
+- Adrian Felipe Navarro - 0192603
 
 ---
 
