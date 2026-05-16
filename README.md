@@ -121,7 +121,12 @@ Comunicación mediante props y eventos.
 - Hero visual principal
 
 ---
+## Instalar dependencias
 
+Antes de ejecutar el proyecto, instalar las dependencias:
+
+ - npm install
+ - npm run dev
 ## 💾 Uso de LocalStorage
 
 Los productos se almacenan en el navegador para simular persistencia de datos.
