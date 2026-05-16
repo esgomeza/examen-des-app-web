@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import usersData from '../data/users.json'
 
 const user = ref('')
 const pass = ref('')
@@ -9,12 +10,25 @@ const error = ref(false)
 const router = useRouter()
 
 const login = () => {
-  if (user.value === 'admin' && pass.value === '1234') {
+
+  const usuarioEncontrado = usersData.find(
+    u =>
+      u.usuario === user.value &&
+      u.password === pass.value
+  )
+
+  if (usuarioEncontrado) {
+
     localStorage.setItem('auth', true)
+
     router.push('/dashboard/productos')
+
   } else {
+
     error.value = true
+
   }
+
 }
 </script>
 
