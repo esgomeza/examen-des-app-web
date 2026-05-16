@@ -44,6 +44,7 @@ function formatPrecio(precio) {
 // =========================
 
 const carritoAbierto = ref(false)
+
 const carrito = ref([])
 
 const totalItems = computed(() =>
@@ -58,50 +59,70 @@ const totalPrecio = computed(() =>
 )
 
 function agregarAlCarrito(producto) {
+
   const existente = carrito.value.find(
     item => item.id === producto.id
   )
 
   if (existente) {
+
     existente.cantidad++
+
   } else {
+
     carrito.value.push({
       ...producto,
       cantidad: 1
     })
+
   }
 
   carritoAbierto.value = true
 }
 
 function quitarUno(id) {
-  const item = carrito.value.find(i => i.id === id)
+
+  const item = carrito.value.find(
+    i => i.id === id
+  )
 
   if (!item) return
 
   if (item.cantidad > 1) {
+
     item.cantidad--
+
   } else {
-    carrito.value = carrito.value.filter(i => i.id !== id)
+
+    carrito.value = carrito.value.filter(
+      i => i.id !== id
+    )
+
   }
 }
 
 function eliminarDelCarrito(id) {
-  carrito.value = carrito.value.filter(i => i.id !== id)
+
+  carrito.value = carrito.value.filter(
+    i => i.id !== id
+  )
 }
 
 function vaciarCarrito() {
-  if (confirm('¿Vaciar el carrito?')) {
+
+  if (confirm('¿Vaciar carrito?')) {
     carrito.value = []
   }
 }
 
 function finalizarCompra() {
+
   alert(
-    `✅ Compra finalizada\nTotal: $${formatPrecio(totalPrecio.value)}`
+    `Compra finalizada\nTotal: $${formatPrecio(totalPrecio.value)}`
   )
 
   carrito.value = []
+
   carritoAbierto.value = false
 }
 
@@ -110,11 +131,8 @@ function finalizarCompra() {
 // =========================
 
 const mostrarModal = ref(false)
-const mostrarModalDetalle = ref(false)
 
 const editando = ref(false)
-
-const productoDetalle = ref(null)
 
 const errores = ref({})
 
@@ -130,33 +148,39 @@ const formVacio = () => ({
 const form = ref(formVacio())
 
 function validar() {
+
   errores.value = {}
 
   if (!form.value.nombre.trim()) {
-    errores.value.nombre = 'El nombre es requerido.'
+    errores.value.nombre = 'Nombre requerido'
   }
 
   if (!form.value.precio || form.value.precio <= 0) {
-    errores.value.precio = 'Precio inválido.'
+    errores.value.precio = 'Precio inválido'
   }
 
   if (!form.value.categoria) {
-    errores.value.categoria = 'Selecciona una categoría.'
+    errores.value.categoria = 'Seleccione categoría'
   }
 
   return Object.keys(errores.value).length === 0
 }
 
 function abrirCrear() {
+
   editando.value = false
+
   form.value = formVacio()
+
   errores.value = {}
 
   mostrarModal.value = true
 }
 
 function abrirEditar(producto) {
+
   editando.value = true
+
   form.value = { ...producto }
 
   errores.value = {}
@@ -164,27 +188,31 @@ function abrirEditar(producto) {
   mostrarModal.value = true
 }
 
-function verDetalle(producto) {
-  productoDetalle.value = producto
-  mostrarModalDetalle.value = true
-}
-
 function guardar() {
+
   if (!validar()) return
 
   if (editando.value) {
+
     const idx = productos.value.findIndex(
       p => p.id === form.value.id
     )
 
     if (idx !== -1) {
-      productos.value[idx] = { ...form.value }
+
+      productos.value[idx] = {
+        ...form.value
+      }
+
     }
+
   } else {
+
     productos.value.push({
       ...form.value,
       id: Date.now()
     })
+
   }
 
   guardarStorage()
@@ -193,7 +221,9 @@ function guardar() {
 }
 
 function eliminar(id) {
-  if (confirm('¿Eliminar este producto?')) {
+
+  if (confirm('¿Eliminar producto?')) {
+
     productos.value = productos.value.filter(
       p => p.id !== id
     )
@@ -204,6 +234,7 @@ function eliminar(id) {
 </script>
 
 <template>
+
   <div>
 
     <!-- ENCABEZADO -->
@@ -211,16 +242,20 @@ function eliminar(id) {
     <div class="d-flex justify-content-between align-items-center mb-4">
 
       <div>
-        <h3 class="fw-bold mb-1">Productos</h3>
+
+        <h3 class="fw-bold mb-1">
+          Productos
+        </h3>
 
         <small class="text-muted">
           {{ productosFiltrados.length }} productos disponibles
         </small>
+
       </div>
 
       <div class="d-flex gap-2">
 
-        <!-- BOTON CARRITO -->
+        <!-- CARRITO -->
 
         <button
           class="btn btn-outline-danger position-relative"
@@ -242,12 +277,22 @@ function eliminar(id) {
 
         <!-- NUEVO PRODUCTO -->
 
+        <button
+          class="btn btn-danger"
+          @click="abrirCrear"
+        >
+
+          <i class="bi bi-plus-lg me-1"></i>
+
+          Nuevo producto
+
+        </button>
 
       </div>
 
     </div>
 
-    <!-- PRODUCTOS -->
+    <!-- CARDS -->
 
     <div class="row g-4">
 
@@ -271,7 +316,7 @@ function eliminar(id) {
 
           </div>
 
-          <!-- CONTENIDO -->
+          <!-- BODY -->
 
           <div class="card-body d-flex flex-column">
 
@@ -279,7 +324,7 @@ function eliminar(id) {
               {{ p.categoria }}
             </span>
 
-            <h5 class="fw-bold mb-2">
+            <h5 class="fw-bold">
               {{ p.nombre }}
             </h5>
 
@@ -293,17 +338,16 @@ function eliminar(id) {
                 ${{ formatPrecio(p.precio) }}
               </h4>
 
-              <!-- BOTON CARRITO -->
-
               <button
-                class="btn btn-danger w-100 mb-2"
+                class="btn btn-danger w-100"
                 @click="agregarAlCarrito(p)"
               >
-                <i class="bi bi-cart-plus me-1"></i>
-                Añadir al carrito
-              </button>
 
-              
+                <i class="bi bi-cart-plus me-1"></i>
+
+                Añadir al carrito
+
+              </button>
 
             </div>
 
@@ -313,22 +357,96 @@ function eliminar(id) {
 
       </div>
 
-      <!-- SIN PRODUCTOS -->
+    </div>
 
-      <div
-        v-if="productosFiltrados.length === 0"
-        class="text-center py-5 text-muted"
-      >
+    <!-- TABLA CRUD -->
 
-        <i class="bi bi-search fs-1 d-block mb-3"></i>
+    <div class="table-responsive mt-5">
 
-        No hay productos disponibles.
+      <table class="table table-hover align-middle shadow-sm">
 
-      </div>
+        <thead class="table-dark">
+
+          <tr>
+            <th>#</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            v-for="(p, i) in productosFiltrados"
+            :key="p.id"
+          >
+
+            <td>{{ i + 1 }}</td>
+
+            <td>
+
+              <img
+                :src="p.imagen"
+                width="60"
+                height="60"
+                style="object-fit: contain;"
+              >
+
+            </td>
+
+            <td class="fw-bold">
+              {{ p.nombre }}
+            </td>
+
+            <td>
+
+              <span class="badge bg-secondary">
+                {{ p.categoria }}
+              </span>
+
+            </td>
+
+            <td class="text-danger fw-bold">
+              ${{ formatPrecio(p.precio) }}
+            </td>
+
+            <!-- BOTONES -->
+
+            <td class="text-center">
+
+              <!-- EDITAR -->
+
+              <button
+                class="btn btn-warning btn-sm me-1"
+                @click="abrirEditar(p)"
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+
+              <!-- ELIMINAR -->
+
+              <button
+                class="btn btn-danger btn-sm"
+                @click="eliminar(p.id)"
+              >
+                <i class="bi bi-x-lg"></i>
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
 
     </div>
 
-    <!-- CARRITO -->
+    <!-- PANEL CARRITO -->
 
     <transition name="slide">
 
@@ -349,10 +467,6 @@ function eliminar(id) {
 
             Mi carrito
 
-            <span class="badge bg-danger ms-1">
-              {{ totalItems }}
-            </span>
-
           </h6>
 
           <button
@@ -371,9 +485,9 @@ function eliminar(id) {
             class="text-center text-muted py-5"
           >
 
-            <i class="bi bi-cart-x d-block fs-1 mb-2"></i>
+            <i class="bi bi-cart-x fs-1 d-block mb-2"></i>
 
-            El carrito está vacío
+            Carrito vacío
 
           </div>
 
@@ -385,19 +499,18 @@ function eliminar(id) {
 
             <img
               :src="item.imagen"
-              :alt="item.nombre"
-              width="52"
-              height="44"
-              style="object-fit: cover; border-radius: 6px;"
+              width="55"
+              height="55"
+              style="object-fit: contain;"
             >
 
-            <div class="flex-grow-1 overflow-hidden">
+            <div class="flex-grow-1">
 
-              <div class="fw-semibold small text-truncate">
+              <div class="fw-semibold">
                 {{ item.nombre }}
               </div>
 
-              <div class="text-danger small fw-bold">
+              <div class="text-danger fw-bold">
                 ${{ formatPrecio(item.precio) }}
               </div>
 
@@ -408,18 +521,18 @@ function eliminar(id) {
             <div class="d-flex align-items-center gap-1">
 
               <button
-                class="btn btn-outline-secondary btn-sm px-2 py-0"
+                class="btn btn-outline-secondary btn-sm"
                 @click="quitarUno(item.id)"
               >
-                −
+                -
               </button>
 
-              <span class="small fw-bold px-1">
+              <span>
                 {{ item.cantidad }}
               </span>
 
               <button
-                class="btn btn-outline-secondary btn-sm px-2 py-0"
+                class="btn btn-outline-secondary btn-sm"
                 @click="agregarAlCarrito(item)"
               >
                 +
@@ -430,10 +543,12 @@ function eliminar(id) {
             <!-- ELIMINAR -->
 
             <button
-              class="btn btn-sm text-danger p-0 ms-1"
+              class="btn btn-sm text-danger"
               @click="eliminarDelCarrito(item.id)"
             >
+
               <i class="bi bi-x-lg"></i>
+
             </button>
 
           </div>
@@ -456,22 +571,20 @@ function eliminar(id) {
 
           <button
             class="btn btn-danger w-100 mb-2"
-            :disabled="carrito.length === 0"
             @click="finalizarCompra"
           >
-
-            <i class="bi bi-bag-check me-1"></i>
 
             Finalizar compra
 
           </button>
 
           <button
-            class="btn btn-outline-secondary w-100 btn-sm"
-            :disabled="carrito.length === 0"
+            class="btn btn-outline-secondary w-100"
             @click="vaciarCarrito"
           >
+
             Vaciar carrito
+
           </button>
 
         </div>
@@ -488,114 +601,168 @@ function eliminar(id) {
       @click="carritoAbierto = false"
     ></div>
 
+    <!-- MODAL -->
+
+    <div
+      v-if="mostrarModal"
+      class="modal d-block"
+      style="background: rgba(0,0,0,0.5);"
+    >
+
+      <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+          <div class="modal-header bg-dark text-white">
+
+            <h5 class="modal-title">
+
+              {{ editando ? 'Editar producto' : 'Nuevo producto' }}
+
+            </h5>
+
+            <button
+              class="btn-close btn-close-white"
+              @click="mostrarModal = false"
+            ></button>
+
+          </div>
+
+          <div class="modal-body">
+
+            <input
+              v-model="form.nombre"
+              class="form-control mb-2"
+              placeholder="Nombre"
+            >
+
+            <input
+              v-model.number="form.precio"
+              type="number"
+              class="form-control mb-2"
+              placeholder="Precio"
+            >
+
+            <select
+              v-model="form.categoria"
+              class="form-select mb-2"
+            >
+
+              <option value="">
+                Seleccione categoría
+              </option>
+
+              <option value="calzado">
+                Calzado
+              </option>
+
+              <option value="ropa">
+                Ropa
+              </option>
+
+              <option value="accesorios">
+                Accesorios
+              </option>
+
+              <option value="equipos">
+                Equipos
+              </option>
+
+            </select>
+
+            <textarea
+              v-model="form.descripcion"
+              class="form-control mb-2"
+              placeholder="Descripción"
+            ></textarea>
+
+            <input
+              v-model="form.imagen"
+              class="form-control"
+              placeholder="URL Imagen"
+            >
+
+          </div>
+
+          <div class="modal-footer">
+
+            <button
+              class="btn btn-secondary"
+              @click="mostrarModal = false"
+            >
+              Cancelar
+            </button>
+
+            <button
+              class="btn btn-danger"
+              @click="guardar"
+            >
+              Guardar
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </template>
 
 <style scoped>
 
-/* =========================
-   CARD PRODUCTO
-========================= */
-
 .producto-card{
-  border-radius: 18px; /* bordes redondeados */
-  overflow: hidden; /* evita que la imagen salga de la card */
-  transition: all 0.3s ease; /* animacion suave */
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.3s ease;
   background: white;
 }
 
-/* efecto hover */
 .producto-card:hover{
-  transform: translateY(-6px); /* levanta la card */
+  transform: translateY(-6px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
 
-/* =========================
-   CONTENEDOR IMAGEN
-========================= */
-
 .producto-img-container{
-
-  /* altura fija para todas */
-  height: 260px;
-
-  /* evita desbordamiento */
+  height: 240px;
   overflow: hidden;
-
-  /* color fondo */
-  background: #f5f5f5;
-
-  /* centra imagen */
+  background: white;
   display: flex;
-  align-items: center;
   justify-content: center;
-
-  /* padding interno */
+  align-items: center;
   padding: 10px;
 }
 
-/* =========================
-   IMAGEN PRODUCTO
-========================= */
-
 .producto-img{
-
-  /* ocupa todo el espacio */
   width: 100%;
   height: 100%;
-
-  /*
-    contain:
-    muestra imagen completa
-    sin cortarla
-  */
   object-fit: contain;
-
-  /* centra imagen */
-  object-position: center;
-
-  /* animacion */
   transition: transform 0.3s ease;
-
-  /* fondo blanco */
-  background: white;
 }
 
-/* zoom al pasar mouse */
 .producto-card:hover .producto-img{
   transform: scale(1.05);
 }
-
-/* =========================
-   PANEL CARRITO
-========================= */
 
 .carrito-panel{
   position: fixed;
   top: 0;
   right: 0;
-
   width: 360px;
   height: 100vh;
-
   background: white;
-
   z-index: 1055;
 }
 
-/* fondo oscuro */
 .carrito-overlay{
   position: fixed;
   inset: 0;
-
   background: rgba(0,0,0,0.3);
-
   z-index: 1054;
 }
-
-/* =========================
-   ANIMACION CARRITO
-========================= */
 
 .slide-enter-active,
 .slide-leave-active{
@@ -608,4 +775,3 @@ function eliminar(id) {
 }
 
 </style>
-
