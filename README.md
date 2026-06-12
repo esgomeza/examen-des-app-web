@@ -114,7 +114,7 @@ examen-des-app-web/
 ### 1️⃣ Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU-USUARIO/TU-REPOSITORIO.git
+git clone https://github.com/esgomeza/examen-des-app-web.git
 ```
 
 ### 2️⃣ Ingresar al proyecto
